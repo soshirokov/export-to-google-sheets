@@ -14,7 +14,7 @@ const saveValue = async function (row, header, value) {
     row.save();
 }
 
-const sheetParser = async () => {
+const parseSheet = async () => {
     const sheet = await googleSheet(0);
     const rows = await sheet.getRows();
     return rows;
@@ -22,5 +22,5 @@ const sheetParser = async () => {
 
 module.exports = {
     saveValue,
-    sheetParser
+    parseSheet
 };

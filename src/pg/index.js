@@ -1,19 +1,21 @@
 const { Pool } = require('pg');
-const { getQuery, checkQuery } = require('./queries');
+const { getQuery, checkIsQueryExist } = require('./queries');
 const dbCreds = require('../../configs/db_credits.json');
 
 const getMetric = async (project, metric, dateStart, dateEnd) => {
-    if (!dbCreds[project] || !checkQuery(project, metric)) return { result: { rows: [{ empty: '' }] } };
+    const connectionCreds = dbCreds[project];
 
-    const pool = new Pool(dbCreds[project]);
+    if (!connectionCreds || !checkIsQueryExist(project, metric)) {
+        return { result: { rows: [{ empty: '' }] } }
+    };
 
-    const toQuery = getQuery(project, metric, dateStart, dateEnd);
+    const pool = new Pool(connectionCreds);
 
-    const result = await pool.query(toQuery);
+    const query = getQuery(project, metric, dateStart, dateEnd);
+
+    const result = await pool.query(query);
 
     return result;
 }
 
-module.exports = getMetric;
-
-
+module.exports = { getMetric, checkIsQueryExist   };

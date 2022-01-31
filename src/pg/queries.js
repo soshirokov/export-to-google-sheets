@@ -1,11 +1,12 @@
-const queryBase = require("../../configs/queries.js");
+const { getQueryBase } = require("../../configs/queries.js");
 
 const getQuery = (project, metric, dateStart, dateEnd) => {
-    return queryBase(dateStart, dateEnd)[project][metric];
+    const queryWithDate = getQueryBase(dateStart, dateEnd);
+    return queryWithDate[project][metric];
 }
 
-const checkQuery = (project, metric) => {
-    return project in queryBase() && metric in queryBase()[project]
+const checkIsQueryExist = (project, metric) => {
+    return project in getQueryBase() && metric in getQueryBase()[project]
 }
 
-module.exports = { getQuery, checkQuery };
+module.exports = { getQuery, checkIsQueryExist };
